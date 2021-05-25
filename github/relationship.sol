@@ -56,7 +56,7 @@ contract relationship is Ownable{
     address defultFather;
     mapping(address => address) public father;
     mapping(address => address) public grandFather;
-    mapping(address => bool) public callSetRelationshipAddress;//可以设置除自己外地址的推荐人的特权地址
+    mapping(address => bool) public callSetRelationshipAddress;
     
     modifier callSetRelationship(){
         require(callSetRelationshipAddress[msg.sender] == true,"can't set relationship!");
@@ -64,14 +64,14 @@ contract relationship is Ownable{
     }
 
     function init(address _defultFather, address _airDrop, address _buy) public onlyOwner(){
-        defultFather = _defultFather;//默认推荐人，在没有其他推荐人的情况下，一二代推荐人都是他
+        defultFather = _defultFather;
         setCallSetRelationshipAddress(_airDrop, true);
         setCallSetRelationshipAddress(_buy, true);
     }
     
     function _setRelationship(address _son, address _father) internal {
-        require(_son != _father,"Father cannot be himself!");//推荐人不能是他自己
-        if (father[_son] != address(0)){//推荐人如果已经存在 直接返回，这里是为了满足购买调用时绑定推荐人关系，如果推荐人已经存在了，就直接返回，不做任何操作
+        require(_son != _father,"Father cannot be himself!");
+        if (father[_son] != address(0)){
             return;
         }
         address _grandFather = getFather(_father);
